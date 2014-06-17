@@ -1,0 +1,27 @@
+{
+  "name": "cordage",
+  "version": "0.0.0",
+  "description": "A CLI tool making it easier to deploy and manage your application using fleet, etcd, and CoreOS.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/madjam002/cordage.git"
+  },
+  "keywords": [
+    "coreos",
+    "etcd",
+    "fleet",
+    "cli",
+    "devops",
+    "deployment"
+  ],
+  "author": "Jamie Greeff <madjam002@googlemail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/madjam002/cordage/issues"
+  },
+  "homepage": "https://github.com/madjam002/cordage"
+}
