@@ -24,7 +24,7 @@
     },
     "line_endings": {
         "name": "line_endings",
-        "level": "ignore",
+        "level": "error",
         "value": "unix"
     },
     "no_trailing_semicolons": {
@@ -71,11 +71,11 @@
     },
     "no_empty_param_list": {
         "name": "no_empty_param_list",
-        "level": "ignore"
+        "level": "error"
     },
     "no_stand_alone_at": {
         "name": "no_stand_alone_at",
-        "level": "ignore"
+        "level": "error"
     },
     "space_operators": {
         "name": "space_operators",
@@ -97,11 +97,11 @@
     "newlines_after_classes": {
         "name": "newlines_after_classes",
         "value": 3,
-        "level": "ignore"
+        "level": "error"
     },
     "no_unnecessary_fat_arrows": {
         "name": "no_unnecessary_fat_arrows",
-        "level": "warn"
+        "level": "error"
     },
     "missing_fat_arrows": {
         "name": "missing_fat_arrows",

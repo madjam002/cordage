@@ -14,9 +14,6 @@ module.exports = ->
       compile:
         files: ['src/**/*.coffee']
         tasks: ['compile']
-      test:
-        files: ['src/**/*.coffee']
-        tasks: ['test']
 
     coffeelint:
       app:
@@ -25,21 +22,14 @@ module.exports = ->
         options:
           configFile: 'coffeelint.json'
 
-    jasmine_node:
-      options:
-        coffee: true
-        useHelpers: true
-      app: ['test/']
-
 
   # Plugins
   @loadNpmTasks 'grunt-coffeelint'
   @loadNpmTasks 'grunt-contrib-coffee'
   @loadNpmTasks 'grunt-contrib-watch'
-  @loadNpmTasks 'grunt-jasmine-node'
 
   # Tasks
   @registerTask 'compile', ['coffee:compile']
 
   @registerTask 'default', ['compile']
-  @registerTask 'test', ['jasmine_node:app', 'coffeelint:app']
+  @registerTask 'test', ['coffeelint:app']
