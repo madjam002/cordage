@@ -4,8 +4,8 @@
 After=docker.service
 
 [Service]
-{% if timeout %}TimeoutStartSec={{ timeout }}
-{% endif %}ExecStartPre=/usr/bin/docker pull {{ image }}
+TimeoutStartSec={{ pullTimeout }}
+ExecStartPre=/usr/bin/docker pull {{ image }}
 ExecStart=/usr/bin/docker run -rm -name {{ serviceName }} {{ image }}
 ExecStop=/usr/bin/docker kill {{ serviceName }}
 

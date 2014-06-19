@@ -21,7 +21,7 @@ module.exports = (service, config) ->
     serviceName: serviceName
     serviceNameWildcard: serviceNameWildcard
 
-    timeout: config.timeout
+    pullTimeout: config.pullTimeout or 0
 
     image: config.image
     description: config.description
