@@ -1,5 +1,7 @@
 fs = require 'fs'
 
+Service = require './service'
+
 module.exports =
   services: []
 
@@ -17,10 +19,7 @@ module.exports =
     # create the context which will be passed to the cordagefile exports function
     context =
       service: (name, options) =>
-        if @services[name]?
-          throw new Error "Service \"#{name}\" has already been registered"
-
-        @services[name] = options
+        @services.push new Service(name, options)
 
     # finally invoke the cordagefile exports function with the context
     cordagefile.call context

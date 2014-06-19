@@ -4,10 +4,16 @@ program
 .version '0.0.1'
 
 program
-.command 'deploy <environment>'
+.command 'deploy'
 .description 'builds and deploys your application'
-.action (environment) ->
-  require('./deploy').run environment
+.action ->
+  require('./deploy').run()
+
+program
+.command 'list'
+.description 'view services in the cluster'
+.action ->
+  require('./list').run()
 
 program
 .parse process.argv

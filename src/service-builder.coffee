@@ -9,29 +9,29 @@ servicesPath = "#{process.cwd()}/.cordage/services"
 templates =
   service: swig.compileFile "#{resourcesPath}/service.tmpl"
 
-module.exports = (service, config) ->
-  version = 'v1' # TODO generate somehow
-  instance = 1 # TODO generate somehow
-  serviceName = "#{service}.#{version}.#{instance}"
-  serviceNameWildcard = "#{service}.#{version}.*"
+module.exports = (service, instance) ->
+  fullFileName = "#{service.fileName}.#{instance}"
 
   # generate service template using service configuration
   output = templates.service
-    service: service
-    serviceName: serviceName
-    serviceNameWildcard: serviceNameWildcard
+    name: service.name
+    fileName: service.fileName
+    fullFileName: fullFileName
+    instance: instance
+    version: service.version
 
-    pullTimeout: config.pullTimeout or 0
+    pullTimeout: service.config.pullTimeout or 0
 
-    image: config.image
-    description: config.description
+    image: service.config.image
+    description: service.config.description
 
-    rules: config.rules
+    rules: service.config.rules
 
   # determine service file path and write service file
-  filePath = "#{servicesPath}/#{serviceName}.service"
+  filePath = "#{servicesPath}/#{fullFileName}.service"
 
   mkdirp.sync servicesPath
   fs.writeFileSync filePath, output
 
-  return filePath
+
+module.exports.servicesPath = servicesPath

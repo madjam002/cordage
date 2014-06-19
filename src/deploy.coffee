@@ -5,7 +5,7 @@ log = require './log'
 fleetctl = require './fleetctl'
 
 module.exports =
-  run: (environment) ->
+  run: ->
     services = []
 
     build.build()

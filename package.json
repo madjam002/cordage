@@ -43,6 +43,7 @@
   "preferGlobal": true,
   "dependencies": {
     "chalk": "~0.4.0",
+    "cli-table": "~0.3.0",
     "coffee-script": "~1.7.1",
     "commander": "~2.2.0",
     "fleetctl": "~0.1.3",
