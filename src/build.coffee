@@ -1,15 +1,22 @@
+q = require 'q'
+
+log = require './log'
 cordagefile = require './cordagefile'
-ServiceBuilder = require './util/service-builder'
+Service = require './service'
 
 module.exports =
   build: ->
-    console.log 'Building services...'
-
-    # read cordagefile
     cordagefile.read()
 
-    for service, config of cordagefile.services
-      console.log "Building #{service}"
+    log.action 'Building services...'
+    services = []
 
-      builder = new ServiceBuilder service, config
-      builder.build()
+    for service, config of cordagefile.services
+      log.info service, 'Building'
+
+      service = new Service service, config
+      service.build()
+
+      services.push service
+
+    q services

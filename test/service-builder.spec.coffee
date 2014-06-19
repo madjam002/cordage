@@ -1,4 +1,4 @@
-jest.dontMock '../../src/util/service-builder'
+jest.dontMock '../src/service-builder'
 
 describe 'service builder', ->
 
@@ -12,10 +12,9 @@ describe 'service builder', ->
 
       jest.setMock 'swig', compileFile: -> -> 'template contents'
 
-      ServiceBuilder = require '../../src/util/service-builder'
+      builder = require '../src/service-builder'
 
-      builder = new ServiceBuilder 'app', description: 'App Server'
-      builder.build()
+      builder 'app', description: 'App Server'
 
       expect(fs.writeFileSync).toBeCalledWith(
         "#{process.cwd()}/.cordage/services/app.v1.1.service", 'template contents'
