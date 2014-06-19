@@ -14,6 +14,8 @@ module.exports = ->
       compile:
         files: ['src/**/*.coffee']
         tasks: ['compile']
+      options:
+        spawn: false
 
     coffeelint:
       app:

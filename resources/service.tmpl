@@ -1,13 +1,14 @@
 [Unit]
-{% if description %}Description={{ description }}{% elseif service %}Description={{ service }}{% endif %}
+{% if description %}Description={{ description }}{%
+   elseif service %}Description={{ service }}{% endif %}
 After=docker.service
 
 [Service]
-{% if timeout %}TimeoutStartSec={{ timeout }}{% endif %}
-ExecStartPre=/usr/bin/docker pull {{ image }}
+{% if timeout %}TimeoutStartSec={{ timeout }}
+{% endif %}ExecStartPre=/usr/bin/docker pull {{ image }}
 ExecStart=/usr/bin/docker run -rm -name {{ serviceName }} {{ image }}
 ExecStop=/usr/bin/docker kill {{ serviceName }}
 
-{% if rules %}
-[X-Fleet]
+{% if rules %}[X-Fleet]
 {% if rules.onePerHost %}X-Conflicts={{ serviceNameWildcard }}.service{% endif %}
+{% endif %}

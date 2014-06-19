@@ -10,8 +10,14 @@
   "jest": {
     "testDirectoryName": "test",
     "scriptPreprocessor": "test/.preprocessor.js",
-    "testFileExtensions": ["coffee", "js"],
-    "moduleFileExtensions": ["coffee", "js"]
+    "testFileExtensions": [
+      "coffee",
+      "js"
+    ],
+    "moduleFileExtensions": [
+      "coffee",
+      "js"
+    ]
   },
   "repository": {
     "type": "git",
@@ -38,7 +44,9 @@
   "dependencies": {
     "coffee-script": "~1.7.1",
     "commander": "~2.2.0",
+    "fleetctl": "~0.1.3",
     "mkdirp": "~0.5.0",
+    "q": "~1.0.1",
     "swig": "~1.3.2"
   },
   "devDependencies": {
