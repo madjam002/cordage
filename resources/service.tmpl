@@ -6,7 +6,7 @@ After=docker.service
 [Service]
 TimeoutStartSec={{ pullTimeout }}
 ExecStartPre=/usr/bin/docker pull {{ image }}
-ExecStart=/usr/bin/docker run -rm -name {{ fullFileName }} {{ image }}
+ExecStart=/usr/bin/docker run --rm=true --name="{{ fullFileName }}" {{ image }}
 ExecStop=/usr/bin/docker kill {{ fullFileName }}
 
 {% if rules %}[X-Fleet]
