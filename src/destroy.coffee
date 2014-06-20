@@ -1,6 +1,7 @@
 q = require 'q'
 _ = require 'lodash'
 string = require 'string'
+inquirer = require 'inquirer'
 
 log = require './log'
 fleetctl = require './fleetctl'
@@ -15,11 +16,13 @@ class Destroy
     program
     .command 'destroy <service>'
     .description 'stops and destroys all units for the given service'
+    .option '-f, --force', 'skip prompts'
     .action @run
 
   # Public: Run the destroy command.
-  run: (serviceName) ->
+  run: (serviceName, options) ->
     service = null
+    units = null
     cordagefile.read()
 
     .then ->
@@ -34,11 +37,25 @@ class Destroy
       _.filter units, (unit) ->
         true if Service.fromUnitName(unit.unit, [ service ]) is service
 
-    .then (units) ->
-      if units.length is 0
-        log.action 'No units found, nothing to destroy.'
-        return
+    .then (serviceUnits) ->
+      units = serviceUnits
 
+      if units.length is 0
+        throw new Error 'No units found, nothing to destroy.'
+
+      # prompt user if --force wasn't provided
+      unless options.force
+        q.promise (resolve) ->
+          inquirer.prompt [
+            type: 'confirm'
+            name: 'confirm'
+            default: false
+            message: "Are you sure you want to destroy ALL units for the #{serviceName} service?"
+          ], resolve
+        .then (answer) ->
+          throw new Error 'Cancelled' unless answer.confirm
+
+    .then ->
       log.action "Destroying #{serviceName}..."
 
       # run `fleet destroy` for each unit

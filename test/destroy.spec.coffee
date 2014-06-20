@@ -35,7 +35,7 @@ describe 'cordage destroy', ->
       config:
         description: 'Application Service'
 
-    destroy.run('app').then ->
+    destroy.run('app', force: true).then ->
       expect(fleetctl.destroy).toHaveBeenCalledWith 'app.v1.1.service'
       expect(fleetctl.destroy.calls.length).toBe 1
 
@@ -51,6 +51,6 @@ describe 'cordage destroy', ->
     cordagefile.services.push
       name: 'app'
 
-    destroy.run('database').then ->
+    destroy.run('database', force: true).then ->
       expect(fleetctl.destroy).not.toHaveBeenCalled()
       done()
