@@ -1,6 +1,5 @@
 q = require 'q'
 
-build = require './build'
 log = require './log'
 fleetctl = require './fleetctl'
 cordagefile = require './cordagefile'
