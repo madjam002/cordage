@@ -5,6 +5,7 @@ program
 
 commands = [
   require './deploy'
+  require './destroy'
   require './list'
 ]
 
