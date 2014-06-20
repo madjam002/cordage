@@ -5,19 +5,7 @@
   "main": "lib",
   "scripts": {
     "prepublish": "grunt compile",
-    "test": "jest"
-  },
-  "jest": {
-    "testDirectoryName": "test",
-    "scriptPreprocessor": "test/.preprocessor.js",
-    "testFileExtensions": [
-      "coffee",
-      "js"
-    ],
-    "moduleFileExtensions": [
-      "coffee",
-      "js"
-    ]
+    "test": "jasmine-node --coffee test/*.spec.coffee"
   },
   "repository": {
     "type": "git",
@@ -58,6 +46,7 @@
     "grunt-contrib-coffee": "~0.10.1",
     "grunt-contrib-watch": "~0.6.1",
     "grunt": "~0.4.5",
-    "jest-cli": "~0.1.15"
+    "jasmine-node": "~1.14.3",
+    "proxyquire": "~1.0.1"
   }
 }

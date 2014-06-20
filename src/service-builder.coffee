@@ -9,6 +9,7 @@ servicesPath = "#{process.cwd()}/.cordage/services"
 templates =
   service: swig.compileFile "#{resourcesPath}/service.tmpl"
 
+# Public: Generates a serviced file for the given service.
 module.exports = (service, instance) ->
   fullFileName = "#{service.fileName}.#{instance}"
 

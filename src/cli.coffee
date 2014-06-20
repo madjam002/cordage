@@ -3,17 +3,13 @@ program = require 'commander'
 program
 .version '0.0.1'
 
-program
-.command 'deploy'
-.description 'builds and deploys your application'
-.action ->
-  require('./deploy').run()
+commands = [
+  require './deploy'
+  require './list'
+]
 
-program
-.command 'list'
-.description 'view services in the cluster'
-.action ->
-  require('./list').run()
+for Command in commands
+  new Command program
 
 program
 .parse process.argv

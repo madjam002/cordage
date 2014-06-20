@@ -2,6 +2,7 @@ q = require 'q'
 fleetctl = require('fleetctl')()
 
 module.exports =
+  # Public: Run `fleetctl list-units`
   listUnits: ->
     deferred = q.defer()
 
@@ -11,6 +12,7 @@ module.exports =
 
     return deferred.promise
 
+  # Public: Run `fleetctl submit [units]`
   submit: (units) ->
     deferred = q.defer()
 
@@ -20,6 +22,7 @@ module.exports =
 
     return deferred.promise
 
+  # Public: Run `fleetctl start [units]`
   start: (units) ->
     deferred = q.defer()
 

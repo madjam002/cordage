@@ -1,22 +1,29 @@
-jest.dontMock '../src/service-builder'
+proxyquire = require 'proxyquire'
 
 describe 'service builder', ->
 
-  beforeEach ->
-    jest.dontMock 'path'
-
   describe 'build', ->
     it 'should generate a service file using the config', ->
-      fs = require 'fs'
-      mkdirp = require 'mkdirp'
+      fs = jasmine.createSpyObj 'fs', ['writeFileSync']
+      mkdirp = jasmine.createSpyObj 'mkdirp', ['sync']
+      swig = jasmine.createSpyObj 'swig', ['compileFile']
 
-      jest.setMock 'swig', compileFile: -> -> 'template contents'
+      swig.compileFile.andReturn ->
+        'template contents'
 
-      builder = require '../src/service-builder'
+      builder = proxyquire '../src/service-builder',
+        'fs': fs
+        'mkdirp': mkdirp
+        'swig': swig
 
-      builder 'app', description: 'App Server'
+      service =
+        description: 'App Server'
+        fileName: 'app.v1'
+        config: {}
 
-      expect(fs.writeFileSync).toBeCalledWith(
+      builder service, 1
+
+      expect(fs.writeFileSync).toHaveBeenCalledWith(
         "#{process.cwd()}/.cordage/services/app.v1.1.service", 'template contents'
       )
-      expect(mkdirp.sync).toBeCalledWith "#{process.cwd()}/.cordage/services"
+      expect(mkdirp.sync).toHaveBeenCalledWith "#{process.cwd()}/.cordage/services"
