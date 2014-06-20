@@ -31,3 +31,13 @@ module.exports =
       deferred.resolve() unless err
 
     return deferred.promise
+
+  # Public: Run `fleetctl destroy [units]`
+  destroy: (units) ->
+    deferred = q.defer()
+
+    fleetctl.destroy units, (err) ->
+      deferred.reject err if err
+      deferred.resolve() unless err
+
+    return deferred.promise
