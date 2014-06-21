@@ -6,8 +6,8 @@ your application(s)** across several of your own servers using [Docker](http://d
 [CoreOS](http://coreos.com) and [fleet](http://github.com/coreos/fleet).
 
 Cordage runs locally on your machine, meaning there is no complicated software
-to install on your servers. If you're already CoreOS using on your servers, then
-you can get started straight away.
+to install on your servers. If you're already using CoreOS, then you can get
+started straight away.
 
 
 ## Install
@@ -19,7 +19,7 @@ $ npm install -g cordage
 ```
 
 Cordage depends on [Node.js](http://nodejs.org/), [npm](http://npmjs.org/) and [fleetctl](https://coreos.com/docs/launching-containers/launching/fleet-using-the-client/).
-Please make sure these dependencies are installed on your system before using Cordage.
+Please make sure these dependencies are installed on your system.
 
 
 ## Usage
@@ -28,7 +28,7 @@ Please make sure these dependencies are installed on your system before using Co
 
 Cordage uses a simple file called `Cordagefile.coffee` which should live in the root
 of your project repository. This file will define what services will run across your
-servers.
+cluster.
 
 Here is an example `Cordagefile.coffee`:
 
@@ -61,7 +61,7 @@ $ cordage
 ### Deploying services
 
 Once you have configured your services in `Cordagefile.coffee`, you can deploy
-them to your servers.
+them to your cluster.
 
 ##### Build and deploy your services across the cluster
 
@@ -90,9 +90,6 @@ can use the destroy command.
 ```sh
 $ cordage destroy app
 ```
-
-You will then receive a confirmation which you must answer affirmatively to in order
-for the units to be shutdown and destroyed.
 
 
 ## License
