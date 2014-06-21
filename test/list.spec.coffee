@@ -28,6 +28,8 @@ describe 'cordage list', ->
 
     fleetctl.listUnits.andReturn q([
       { unit: 'test.v1.1.service', state: 'activated', active: 'running', ip: '127.0.0.1' }
+      { unit: 'test.v1.2.service', state: 'activated', active: 'running', ip: '127.0.0.1' }
+      { unit: 'test.v1.3.service', state: 'inactive', active: null, ip: null }
     ])
 
     cordagefile.services.push
@@ -38,4 +40,6 @@ describe 'cordage list', ->
 
     list.run().then ->
       expect(cliTable).toContain [ 'test.v1.1', 'activated', 'running', '127.0.0.1' ]
+      expect(cliTable).toContain [ 'test.v1.2', 'activated', 'running', '127.0.0.1' ]
+      expect(cliTable).toContain [ 'test.v1.3', 'inactive', '-', '-' ]
       done()
