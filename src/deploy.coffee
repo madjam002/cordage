@@ -1,5 +1,7 @@
 q = require 'q'
+_ = require 'lodash'
 
+Service = require './service'
 log = require './log'
 fleetctl = require './fleetctl'
 cordagefile = require './cordagefile'
@@ -27,19 +29,36 @@ class Deploy
 
     cordagefile.read()
 
-    .then =>
-      services = cordagefile.services
-      @buildServices()
-
     .then ->
       services = cordagefile.services
+
+      log.action 'Checking for existing units...'
+      fleetctl.listUnits()
+
+    .then (units) ->
+      q.all cordagefile.services.map (service) ->
+
+        # find existing units for this service
+        serviceUnits = _.filter units, (unit) ->
+          true if Service.fromUnitName(unit.unit, [ service ]) is service
+
+        if serviceUnits.length > 0
+          log.info service.name, "#{serviceUnits.length} unit(s) have already been deployed"
+
+        # deploy the same amount of units as there are deployed already
+        service.unitCount = serviceUnits.length
+        log.info service.name, "Building #{service.unitCount} unit(s)"
+
+        service.build unitBuilder
+
+    .then ->
       log.action 'Pushing units...'
       q.all services.map (service) ->
         q.all service.units.map (unit) ->
           fleetctl.submit unit
 
     .then ->
-      log.action 'Starting units...'
+      log.action 'Starting services...'
       q.all services.map (service) ->
         log.info service.name, 'Starting'
 
@@ -48,11 +67,3 @@ class Deploy
 
     .catch (err) ->
       log.error 'An error has occured whilst deploying', err.toString()
-
-  # Public: Build unit files for each service in Cordagefile.coffee
-  buildServices: ->
-    log.action 'Building units...'
-
-    q.all cordagefile.services.map (service) ->
-      log.info service.name, 'Building'
-      service.build unitBuilder

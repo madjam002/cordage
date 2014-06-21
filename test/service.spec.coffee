@@ -9,8 +9,6 @@ describe 'service', ->
       service = new Service 'app',
         description: 'Super awesome application'
 
-      registryApi = jasmine.createSpyObj 'registryApi', ['get']
-
-      service.build unitBuilder, registryApi
+      service.build unitBuilder
 
       expect(unitBuilder.build).toHaveBeenCalledWith service, 1
