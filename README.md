@@ -94,6 +94,6 @@ $ cordage destroy app
 
 ## License
 
-Copyright (c) 2014 Jamie Greeff and other contributors.
-
 Licensed under the MIT License.
+
+View the full license [here](https://raw.githubusercontent.com/madjam002/cordage/master/LICENSE).
