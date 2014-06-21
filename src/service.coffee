@@ -1,23 +1,23 @@
 string = require 'string'
-
-serviceBuilder = require './service-builder'
+q = require 'q'
 
 # Public: Represents a single Service.
 module.exports =
 class Service
 
+  instances: []
+
   constructor: (@name, @config) ->
-    @version = 'v1' # TODO generate somehow
     @instanceCount = 1 # TODO scaling
-    @fileName = "#{@name}.#{@version}"
-    @filePath = "#{serviceBuilder.servicesPath}/#{@fileName}.*.service"
 
   # Public: Builds serviced files for this service.
-  build: ->
-    serviceBuilder this, index for index in [1..@instanceCount]
+  build: (serviceBuilder) =>
+    q.all [1..@instanceCount].map (index) =>
+      serviceBuilder.build this, index
+    .then (@instances) =>
 
   # Public: Creates a new Service instance from the given fleet unit name.
   @fromUnitName = (unitName, services) ->
     for service in services
-      if string(unitName).startsWith service.fileName
+      if string(unitName).startsWith "#{service.name}.v"
         return service

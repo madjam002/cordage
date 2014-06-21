@@ -1,29 +1,37 @@
+q = require 'q'
 proxyquire = require 'proxyquire'
 
 describe 'service builder', ->
 
   describe 'build', ->
-    it 'should generate a service file using the config', ->
+    it 'should generate a service file using the config', (done) ->
       fs = jasmine.createSpyObj 'fs', ['writeFileSync']
       mkdirp = jasmine.createSpyObj 'mkdirp', ['sync']
       swig = jasmine.createSpyObj 'swig', ['compileFile']
+      registryApi =
+        getLatestTagForImage: -> q name: '14.04'
+      config =
+        servicesPath: '/tmp/services'
 
       swig.compileFile.andReturn ->
         'template contents'
 
-      builder = proxyquire '../src/service-builder',
+      ServiceBuilder = proxyquire '../src/service-builder',
         'fs': fs
         'mkdirp': mkdirp
         'swig': swig
 
       service =
         description: 'App Server'
-        fileName: 'app.v1'
+        name: 'app'
         config: {}
 
-      builder service, 1
+      builder = new ServiceBuilder registryApi, config
+      builder.build service, 1
+      .then ->
+        expect(fs.writeFileSync).toHaveBeenCalledWith(
+          "/tmp/services/app.v14-04.1.service", 'template contents'
+        )
+        expect(mkdirp.sync).toHaveBeenCalledWith '/tmp/services'
 
-      expect(fs.writeFileSync).toHaveBeenCalledWith(
-        "#{process.cwd()}/.cordage/services/app.v1.1.service", 'template contents'
-      )
-      expect(mkdirp.sync).toHaveBeenCalledWith "#{process.cwd()}/.cordage/services"
+        done()

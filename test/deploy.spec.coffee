@@ -31,6 +31,9 @@ describe 'cordage deploy', ->
       filePath: '/services/test.v1.*.service'
       config:
         description: 'Testing Service'
+      instances: [
+        '/services/test.v1.*.service'
+      ]
       build: buildCallback
 
     cordagefile.services.push
@@ -39,15 +42,16 @@ describe 'cordage deploy', ->
       filePath: '/services/app.v1.*.service'
       config:
         description: 'Application Service'
+      instances: [
+        '/services/app.v1.*.service'
+      ]
       build: buildCallback
 
     deploy.run().then ->
       expect(buildCallback).toHaveBeenCalled()
 
-      expect(fleetctl.submit).toHaveBeenCalledWith [
-        '/services/test.v1.*.service'
-        '/services/app.v1.*.service'
-      ]
+      expect(fleetctl.submit).toHaveBeenCalledWith '/services/test.v1.*.service'
+      expect(fleetctl.submit).toHaveBeenCalledWith '/services/app.v1.*.service'
       expect(fleetctl.start).toHaveBeenCalledWith '/services/test.v1.*.service'
       expect(fleetctl.start).toHaveBeenCalledWith '/services/app.v1.*.service'
 

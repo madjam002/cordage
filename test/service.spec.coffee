@@ -1,17 +1,16 @@
-proxyquire = require 'proxyquire'
-
 describe 'service', ->
 
   describe 'build', ->
     it 'should call the service builder', ->
-      serviceBuilder = jasmine.createSpy 'serviceBuilder'
+      serviceBuilder = jasmine.createSpyObj 'serviceBuilder', ['build']
 
-      Service = proxyquire '../src/service',
-        './service-builder': serviceBuilder
+      Service = require '../src/service'
 
       service = new Service 'app',
         description: 'Super awesome application'
 
-      service.build()
+      registryApi = jasmine.createSpyObj 'registryApi', ['get']
 
-      expect(serviceBuilder).toHaveBeenCalledWith service, 1
+      service.build serviceBuilder, registryApi
+
+      expect(serviceBuilder.build).toHaveBeenCalledWith service, 1

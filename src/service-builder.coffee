@@ -5,36 +5,43 @@ mkdirp = require 'mkdirp'
 _ = require 'lodash'
 
 resourcesPath = path.resolve "#{__dirname}/../resources"
-servicesPath = "#{process.cwd()}/.cordage/services"
 
 templates =
   service: swig.compileFile "#{resourcesPath}/service.tmpl"
 
-# Public: Generates a serviced file for the given service.
-module.exports = (service, instance) ->
-  fullFileName = "#{service.fileName}.#{instance}"
+# Public: Generates service files.
+module.exports =
+class ServiceBuilder
 
-  # generate service template using service configuration
-  output = templates.service
-    name: service.name
-    fileName: service.fileName
-    fullFileName: fullFileName
-    instance: instance
-    version: service.version
+  constructor: (@registryApi, @config) ->
 
-    pullTimeout: service.config.pullTimeout or 0
+  # Public: Generates a serviced file for the given service.
+  build: (service, instance) =>
+    @registryApi.getLatestTagForImage service.config.image
+    .then (tag) =>
+      fileName = "#{service.name}.v#{tag.name.replace(/\./g, '-')}"
+      fullFileName = "#{fileName}.#{instance}"
 
-    image: service.config.image
-    description: service.config.description
+      # generate service template using service configuration
+      output = templates.service
+        name: service.name
+        fileName: fileName
+        fullFileName: fullFileName
+        instance: instance
+        version: service.version
 
-    ports: _.pairs service.config.ports
-    rules: service.config.rules
+        pullTimeout: service.config.pullTimeout or 0
 
-  # determine service file path and write service file
-  filePath = "#{servicesPath}/#{fullFileName}.service"
+        image: "#{service.config.image}:#{tag.name}"
+        description: service.config.description
 
-  mkdirp.sync servicesPath
-  fs.writeFileSync filePath, output
+        ports: _.pairs service.config.ports
+        rules: service.config.rules
 
+      # determine service file path and write service file
+      filePath = "#{@config.servicesPath}/#{fullFileName}.service"
 
-module.exports.servicesPath = servicesPath
+      mkdirp.sync @config.servicesPath
+      fs.writeFileSync filePath, output
+
+      return filePath
