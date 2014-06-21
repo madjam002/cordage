@@ -2,6 +2,7 @@ path = require 'path'
 fs = require 'fs'
 swig = require 'swig'
 mkdirp = require 'mkdirp'
+_ = require 'lodash'
 
 resourcesPath = path.resolve "#{__dirname}/../resources"
 servicesPath = "#{process.cwd()}/.cordage/services"
@@ -26,6 +27,7 @@ module.exports = (service, instance) ->
     image: service.config.image
     description: service.config.description
 
+    ports: _.pairs service.config.ports
     rules: service.config.rules
 
   # determine service file path and write service file
