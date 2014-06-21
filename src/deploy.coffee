@@ -3,7 +3,7 @@ q = require 'q'
 log = require './log'
 fleetctl = require './fleetctl'
 cordagefile = require './cordagefile'
-ServiceBuilder = require './service-builder'
+UnitBuilder = require './unit-builder'
 RegistryApi = require './registry-api'
 
 # Public: Builds and deploys the application to the cluster.
@@ -11,7 +11,7 @@ module.exports =
 class Deploy
 
   registryApi = null
-  serviceBuilder = null
+  unitBuilder = null
 
   constructor: (program, @config) ->
     program
@@ -23,7 +23,7 @@ class Deploy
   run: =>
     services = null
     registryApi = new RegistryApi
-    serviceBuilder = new ServiceBuilder registryApi, @config
+    unitBuilder = new UnitBuilder registryApi, @config
 
     cordagefile.read()
 
@@ -33,26 +33,26 @@ class Deploy
 
     .then ->
       services = cordagefile.services
-      log.action 'Pushing services...'
+      log.action 'Pushing units...'
       q.all services.map (service) ->
-        q.all service.instances.map (instance) ->
-          fleetctl.submit instance
+        q.all service.units.map (unit) ->
+          fleetctl.submit unit
 
     .then ->
-      log.action 'Starting services...'
+      log.action 'Starting units...'
       q.all services.map (service) ->
         log.info service.name, 'Starting'
 
-        q.all service.instances.map (instance) ->
-          fleetctl.start instance
+        q.all service.units.map (unit) ->
+          fleetctl.start unit
 
     .catch (err) ->
       log.error 'An error has occured whilst deploying', err.toString()
 
-  # Public: Build serviced files for each service in Cordagefile.coffee
+  # Public: Build unit files for each service in Cordagefile.coffee
   buildServices: ->
-    log.action 'Building services...'
+    log.action 'Building units...'
 
     q.all cordagefile.services.map (service) ->
       log.info service.name, 'Building'
-      service.build serviceBuilder
+      service.build unitBuilder

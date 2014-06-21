@@ -2,7 +2,7 @@ describe 'service', ->
 
   describe 'build', ->
     it 'should call the service builder', ->
-      serviceBuilder = jasmine.createSpyObj 'serviceBuilder', ['build']
+      unitBuilder = jasmine.createSpyObj 'unitBuilder', ['build']
 
       Service = require '../src/service'
 
@@ -11,6 +11,6 @@ describe 'service', ->
 
       registryApi = jasmine.createSpyObj 'registryApi', ['get']
 
-      service.build serviceBuilder, registryApi
+      service.build unitBuilder, registryApi
 
-      expect(serviceBuilder.build).toHaveBeenCalledWith service, 1
+      expect(unitBuilder.build).toHaveBeenCalledWith service, 1

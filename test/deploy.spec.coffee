@@ -22,37 +22,42 @@ describe 'cordage deploy', ->
       './fleetctl': fleetctl
 
     deploy = new Deploy program
-
     buildCallback = jasmine.createSpy 'build'
 
     cordagefile.services.push
       name: 'test'
-      fileName: 'test.v1'
-      filePath: '/services/test.v1.*.service'
+      fileName: 'test.v0-0-1'
       config:
         description: 'Testing Service'
-      instances: [
-        '/services/test.v1.*.service'
+      units: [
+        '/services/test.v0-0-1.1.service'
       ]
       build: buildCallback
 
     cordagefile.services.push
       name: 'app'
-      fileName: 'app.v1'
-      filePath: '/services/app.v1.*.service'
+      fileName: 'app.v0-0-1'
       config:
         description: 'Application Service'
-      instances: [
-        '/services/app.v1.*.service'
+      units: [
+        '/services/app.v0-0-1.1.service'
+        '/services/app.v0-0-1.2.service'
       ]
       build: buildCallback
 
     deploy.run().then ->
       expect(buildCallback).toHaveBeenCalled()
 
-      expect(fleetctl.submit).toHaveBeenCalledWith '/services/test.v1.*.service'
-      expect(fleetctl.submit).toHaveBeenCalledWith '/services/app.v1.*.service'
-      expect(fleetctl.start).toHaveBeenCalledWith '/services/test.v1.*.service'
-      expect(fleetctl.start).toHaveBeenCalledWith '/services/app.v1.*.service'
+      expect(fleetctl.submit).toHaveBeenCalledWith '/services/test.v0-0-1.1.service'
+      expect(fleetctl.start).toHaveBeenCalledWith '/services/test.v0-0-1.1.service'
+
+      expect(fleetctl.submit).toHaveBeenCalledWith '/services/app.v0-0-1.1.service'
+      expect(fleetctl.start).toHaveBeenCalledWith '/services/app.v0-0-1.1.service'
+
+      expect(fleetctl.submit).toHaveBeenCalledWith '/services/app.v0-0-1.2.service'
+      expect(fleetctl.start).toHaveBeenCalledWith '/services/app.v0-0-1.2.service'
+
+      expect(fleetctl.submit.calls.length).toBe 3
+      expect(fleetctl.start.calls.length).toBe 3
 
       done()

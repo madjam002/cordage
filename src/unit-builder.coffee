@@ -9,13 +9,13 @@ resourcesPath = path.resolve "#{__dirname}/../resources"
 templates =
   service: swig.compileFile "#{resourcesPath}/service.tmpl"
 
-# Public: Generates service files.
+# Public: Generates unit files.
 module.exports =
-class ServiceBuilder
+class UnitBuilder
 
   constructor: (@registryApi, @config) ->
 
-  # Public: Generates a serviced file for the given service.
+  # Public: Generates a unit file for the given service.
   build: (service, instance) =>
     @registryApi.getLatestTagForImage service.config.image
     .then (tag) =>

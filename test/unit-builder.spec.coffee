@@ -1,10 +1,10 @@
 q = require 'q'
 proxyquire = require 'proxyquire'
 
-describe 'service builder', ->
+describe 'unit builder', ->
 
   describe 'build', ->
-    it 'should generate a service file using the config', (done) ->
+    it 'should generate a unit file using the config', (done) ->
       fs = jasmine.createSpyObj 'fs', ['writeFileSync']
       mkdirp = jasmine.createSpyObj 'mkdirp', ['sync']
       swig = jasmine.createSpyObj 'swig', ['compileFile']
@@ -16,7 +16,7 @@ describe 'service builder', ->
       swig.compileFile.andReturn ->
         'template contents'
 
-      ServiceBuilder = proxyquire '../src/service-builder',
+      UnitBuilder = proxyquire '../src/unit-builder',
         'fs': fs
         'mkdirp': mkdirp
         'swig': swig
@@ -26,7 +26,7 @@ describe 'service builder', ->
         name: 'app'
         config: {}
 
-      builder = new ServiceBuilder registryApi, config
+      builder = new UnitBuilder registryApi, config
       builder.build service, 1
       .then ->
         expect(fs.writeFileSync).toHaveBeenCalledWith(
