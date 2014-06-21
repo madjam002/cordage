@@ -52,11 +52,11 @@ class List
     # Populate the table with units
     table.populate = (service, units) ->
       for unit in units
-        unitService = Service.fromUnitName unit.unit, cordagefile.services
+        unitService = Service.fromUnitName unit.name, cordagefile.services
 
         if unitService is service
           table.push [
-            string(unit.unit).chompRight('.service').toString()
+            string(unit.name).chompRight('.service').toString()
             unit.state
             unit.active or '-'
             unit.ip or '-'

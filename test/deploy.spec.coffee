@@ -69,8 +69,8 @@ describe 'cordage deploy', ->
     deploy = new Deploy program
 
     fleetctl.listUnits.andReturn q([
-      { unit: 'app.v0-0-1.1.service', state: 'activated', active: 'running', ip: '127.0.0.1' }
-      { unit: 'app.v0-0-1.2.service', state: 'activated', active: 'running', ip: '127.0.0.2' }
+      new Unit 'app.v0-0-1.1.service', state: 'activated', active: 'running', ip: '127.0.0.1'
+      new Unit 'app.v0-0-1.2.service', state: 'activated', active: 'running', ip: '127.0.0.2'
     ])
 
     app = new Service 'app', description: 'Application Service'

@@ -5,8 +5,10 @@ string = require 'string'
 module.exports =
 class Unit
 
-  constructor: (pathOrName) ->
+  constructor: (pathOrName, state) ->
     @name = path.basename pathOrName
 
     if string(pathOrName).startsWith '/' or string(pathOrName).startsWith '.'
       @path = pathOrName
+
+    {@state, @active, @ip} = state if state?

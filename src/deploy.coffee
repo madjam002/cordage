@@ -40,7 +40,7 @@ class Deploy
 
         # find existing units for this service
         serviceUnits = _.filter units, (unit) ->
-          true if Service.fromUnitName(unit.unit, [ service ]) is service
+          true if Service.fromUnitName(unit.name, [ service ]) is service
 
         if serviceUnits.length > 0
           log.info service.name, "#{serviceUnits.length} unit(s) have already been deployed"
