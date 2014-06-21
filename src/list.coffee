@@ -58,8 +58,8 @@ class List
           table.push [
             string(unit.unit).chompRight('.service').toString()
             unit.state
-            unit.active
-            unit.ip
+            unit.active or '-'
+            unit.ip or '-'
           ]
 
     return table
