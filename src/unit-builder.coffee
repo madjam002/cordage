@@ -4,6 +4,8 @@ swig = require 'swig'
 mkdirp = require 'mkdirp'
 _ = require 'lodash'
 
+Unit = require './unit'
+
 resourcesPath = path.resolve "#{__dirname}/../resources"
 
 templates =
@@ -44,4 +46,4 @@ class UnitBuilder
       mkdirp.sync @config.servicesPath
       fs.writeFileSync filePath, output
 
-      return filePath
+      return new Unit filePath

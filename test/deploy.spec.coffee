@@ -2,6 +2,7 @@ proxyquire = require 'proxyquire'
 q = require 'q'
 
 Service = require '../src/service'
+Unit = require '../src/unit'
 
 program = null
 cordagefile = null
@@ -36,13 +37,13 @@ describe 'cordage deploy', ->
     app = new Service 'app', description: 'Application Service', minUnits: 2
     cordagefile.services.push app
 
-    buildUnits = [
-      '/services/test.v0-0-1.1.service'
-      '/services/app.v0-0-1.1.service'
-      '/services/app.v0-0-1.2.service'
+    units = [
+      new Unit '/services/test.v0-0-1.1.service'
+      new Unit '/services/app.v0-0-1.1.service'
+      new Unit '/services/app.v0-0-1.2.service'
     ]
-    currentBuildUnit = 0
-    unitBuilder.build.andCallFake -> q(buildUnits[currentBuildUnit++])
+    currentUnit = 0
+    unitBuilder.build.andCallFake -> q(units[currentUnit++])
 
     deploy.run().then ->
       expect(fleetctl.submit).toHaveBeenCalledWith '/services/test.v0-0-1.1.service'
@@ -75,12 +76,12 @@ describe 'cordage deploy', ->
     app = new Service 'app', description: 'Application Service'
     cordagefile.services.push app
 
-    buildUnits = [
-      '/services/app.v0-0-2.1.service'
-      '/services/app.v0-0-2.2.service'
+    units = [
+      new Unit '/services/app.v0-0-2.1.service'
+      new Unit '/services/app.v0-0-2.2.service'
     ]
-    currentBuildUnit = 0
-    unitBuilder.build.andCallFake -> q(buildUnits[currentBuildUnit++])
+    currentUnit = 0
+    unitBuilder.build.andCallFake -> q(units[currentUnit++])
 
     deploy.run().then ->
       expect(fleetctl.submit).toHaveBeenCalledWith '/services/app.v0-0-2.1.service'

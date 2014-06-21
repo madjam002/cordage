@@ -2,14 +2,14 @@ string = require 'string'
 q = require 'q'
 PropertyAccessors = require 'property-accessors'
 
-# Public: Represents a single Service.
+# Public: Represents a single service.
 module.exports =
 class Service
   PropertyAccessors.includeInto this
 
   _unitCount = 0
 
-  # Public: Contains the file paths for any generated unit files.
+  # Public: Contains the units associated with this service.
   units: []
 
   constructor: (@name, @config) ->

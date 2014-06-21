@@ -55,7 +55,7 @@ class Deploy
       log.action 'Pushing units...'
       q.all services.map (service) ->
         q.all service.units.map (unit) ->
-          fleetctl.submit unit
+          fleetctl.submit unit.path
 
     .then ->
       log.action 'Starting services...'
@@ -63,7 +63,7 @@ class Deploy
         log.info service.name, 'Starting'
 
         q.all service.units.map (unit) ->
-          fleetctl.start unit
+          fleetctl.start unit.path
 
     .catch (err) ->
       log.error 'An error has occured whilst deploying', err.toString()
