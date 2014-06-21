@@ -46,4 +46,7 @@ class UnitBuilder
       mkdirp.sync @config.servicesPath
       fs.writeFileSync filePath, output
 
-      return new Unit filePath
+      unit = new Unit filePath
+      unit.service = service
+
+      return unit

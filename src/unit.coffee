@@ -12,3 +12,7 @@ class Unit
       @path = pathOrName
 
     {@state, @active, @ip} = state if state?
+
+  # Public: Indicates whether this unit belongs to the given service.
+  belongsTo: (service) =>
+    string(@name).startsWith "#{service.name}.v"

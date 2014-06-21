@@ -1,6 +1,7 @@
 Table = require 'cli-table'
 chalk = require 'chalk'
 string = require 'string'
+_ = require 'lodash'
 
 log = require './log'
 fleetctl = require './fleetctl'
@@ -32,7 +33,7 @@ class List
 
         # create and populate table
         table = @createUnitTable()
-        table.populate service, units
+        table.populate _.filter units, (unit) -> unit.belongsTo service
 
         console.log table.toString()
 
@@ -50,16 +51,13 @@ class List
         compact: true
 
     # Populate the table with units
-    table.populate = (service, units) ->
+    table.populate = (units) ->
       for unit in units
-        unitService = Service.fromUnitName unit.name, cordagefile.services
-
-        if unitService is service
-          table.push [
-            string(unit.name).chompRight('.service').toString()
-            unit.state
-            unit.active or '-'
-            unit.ip or '-'
-          ]
+        table.push [
+          string(unit.name).chompRight('.service').toString()
+          unit.state
+          unit.active or '-'
+          unit.ip or '-'
+        ]
 
     return table

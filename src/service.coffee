@@ -27,9 +27,3 @@ class Service
     q.all [1..@unitCount].map (index) =>
       unitBuilder.build this, index
     .then (@units) =>
-
-  # Public: Creates a new Service instance from the given unit name.
-  @fromUnitName = (unitName, services) ->
-    for service in services
-      if string(unitName).startsWith "#{service.name}.v"
-        return service

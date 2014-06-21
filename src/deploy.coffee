@@ -39,8 +39,7 @@ class Deploy
       q.all cordagefile.services.map (service) ->
 
         # find existing units for this service
-        serviceUnits = _.filter units, (unit) ->
-          true if Service.fromUnitName(unit.name, [ service ]) is service
+        serviceUnits = _.filter units, (unit) -> unit.belongsTo service
 
         if serviceUnits.length > 0
           log.info service.name, "#{serviceUnits.length} unit(s) have already been deployed"

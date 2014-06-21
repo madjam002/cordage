@@ -34,8 +34,7 @@ class Destroy
 
     .then (units) ->
       # find only units associated with the service we want to destroy
-      _.filter units, (unit) ->
-        true if Service.fromUnitName(unit.name, [ service ]) is service
+      _.filter units, (unit) -> unit.belongsTo service
 
     .then (serviceUnits) ->
       units = serviceUnits
