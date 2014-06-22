@@ -39,3 +39,13 @@ describe 'service', ->
       service.build unitBuilder, '14.04'
 
       expect(unitBuilder.build).toHaveBeenCalledWith service, '14.04', 1
+
+  describe 'parseName', ->
+    it 'should return just the name if no version is specified', ->
+      expect(Service.parseName 'app').toEqual
+        name: 'app'
+
+    it 'should return just the name and version if a version is specified', ->
+      expect(Service.parseName 'app:14.04').toEqual
+        name: 'app'
+        version: '14.04'
