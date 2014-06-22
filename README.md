@@ -16,6 +16,14 @@ Cordage runs locally on your machine, meaning there is no complicated software
 to install on your servers. If you're already using CoreOS, then you can get
 started straight away.
 
+## Features
+
+- Deploy multiple units/instances of a service easily
+- Configure your services so there is only one unit for that service per host
+- Automatically detects updates to docker images on deployment
+- View your deployed services and units
+- Destroy a specific service and/or a specific version of a service
+
 
 ## Install
 
