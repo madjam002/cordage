@@ -26,20 +26,48 @@ describe 'cordage destroy', ->
     destroy = new Destroy program
 
     fleetctl.listUnits.andReturn q([
-      new Unit 'test.v1.1.service', state: 'activated', active: 'running', ip: '127.0.0.1'
-      new Unit 'app.v1.1.service', state: 'activated', active: 'failed', ip: '127.0.0.2'
+      new Unit 'test.v14-04.1.service', state: 'activated', active: 'running', ip: '127.0.0.1'
+      new Unit 'app.v14-04.1.service', state: 'activated', active: 'failed', ip: '127.0.0.2'
     ])
 
     cordagefile.services.push
       name: 'app'
-      fileName: 'app.v1'
-      filePath: '/services/app.v1.*.service'
       config:
         description: 'Application Service'
 
     destroy.run('app', force: true).then ->
-      expect(fleetctl.destroy).toHaveBeenCalledWith 'app.v1.1.service'
+      expect(fleetctl.destroy).toHaveBeenCalledWith 'app.v14-04.1.service'
       expect(fleetctl.destroy.calls.length).toBe 1
+
+      done()
+
+  it 'should destroy any units associated with a specific version of the given service', (done) ->
+    Destroy = proxyquire '../src/destroy',
+      './cordagefile': cordagefile
+      './fleetctl': fleetctl
+
+    destroy = new Destroy program
+
+    fleetctl.listUnits.andReturn q([
+      new Unit 'test.v14-04.1.service', state: 'activated', active: 'running', ip: '127.0.0.1'
+      new Unit 'test.v14-04.1.service', state: 'activated', active: 'running', ip: '127.0.0.1'
+      new Unit 'app.v12-04.1.service', state: 'activated', active: 'failed', ip: '127.0.0.2'
+      new Unit 'app.v12-04.2.service', state: 'activated', active: 'failed', ip: '127.0.0.2'
+      new Unit 'app.v14-04.1.service', state: 'activated', active: 'failed', ip: '127.0.0.2'
+      new Unit 'app.v14-04.2.service', state: 'activated', active: 'failed', ip: '127.0.0.2'
+      new Unit 'app.v14-04.3.service', state: 'activated', active: 'failed', ip: '127.0.0.2'
+    ])
+
+    cordagefile.services.push
+      name: 'app'
+      config:
+        description: 'Application Service'
+
+    destroy.run('app:14.04', force: true).then ->
+      expect(fleetctl.destroy).toHaveBeenCalledWith 'app.v14-04.1.service'
+      expect(fleetctl.destroy).toHaveBeenCalledWith 'app.v14-04.2.service'
+      expect(fleetctl.destroy).toHaveBeenCalledWith 'app.v14-04.3.service'
+      expect(fleetctl.destroy.calls.length).toBe 3
 
       done()
 

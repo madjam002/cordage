@@ -27,3 +27,13 @@ class Service
     q.all [1..@unitCount].map (index) =>
       unitBuilder.build this, version, index
     .then (@units) =>
+
+  # Public: Parse a service name
+  @parseName: (name) ->
+    # check for version in name
+    if string(name).contains ':'
+      version = name.substring name.indexOf(':') + 1
+      name = name.substring 0, name.indexOf ':'
+
+    name: name
+    version: version

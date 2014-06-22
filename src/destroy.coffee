@@ -21,20 +21,26 @@ class Destroy
 
   # Public: Run the destroy command.
   run: (serviceName, options) ->
+    {name, version} = Service.parseName serviceName
+
     service = null
     units = null
     cordagefile.read()
 
     .then ->
       # find service by name
-      service = _.find cordagefile.services, name: serviceName
-      throw new Error "Service \"#{serviceName}\" not found" unless service?
+      service = _.find cordagefile.services, name: name
+      throw new Error "Service \"#{name}\" not found" unless service?
 
     .then -> fleetctl.listUnits()
 
     .then (units) ->
-      # find only units associated with the service we want to destroy
-      _.filter units, (unit) -> unit.belongsTo service
+      if version?
+        # find units which are associated with the service and version specified
+        _.filter units, (unit) -> unit.belongsTo(service) and unit.isVersion(version)
+      else
+        # find only units associated with the service we want to destroy
+        _.filter units, (unit) -> unit.belongsTo service
 
     .then (serviceUnits) ->
       units = serviceUnits
@@ -44,25 +50,33 @@ class Destroy
 
       # prompt user if --force wasn't provided
       unless options.force
+        if version?
+          message = "Are you sure you want to destroy version #{version} units for the #{name} service?"
+        else
+          message = "Are you sure you want to destroy ALL units for the #{name} service?"
+
         q.promise (resolve) ->
           inquirer.prompt [
             type: 'confirm'
             name: 'confirm'
             default: false
-            message: "Are you sure you want to destroy ALL units for the #{serviceName} service?"
+            message: message
           ], resolve
         .then (answer) ->
           throw new Error 'Cancelled' unless answer.confirm
 
     .then ->
-      log.action "Destroying #{serviceName}..."
+      if version?
+        log.action "Destroying version #{version} of #{name}..."
+      else
+        log.action "Destroying all versions of #{name}..."
 
       # run `fleet destroy` for each unit
       q.all units.map (unit) ->
         log.info string(unit.name).chompRight('.service').toString(), 'destroying'
         fleetctl.destroy unit.name
 
-    .then -> log.action "#{serviceName} has been destroyed."
+    .then -> log.action "#{name} has been destroyed."
 
     .catch (err) ->
-      log.error "An error has occured whilst destroying \"#{serviceName}\"", err.toString()
+      log.error "An error has occured whilst destroying \"#{name}\"", err.toString()
