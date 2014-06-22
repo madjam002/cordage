@@ -1,4 +1,5 @@
 program = require 'commander'
+config = require './config'
 
 program
 .version '0.0.1'
@@ -10,7 +11,7 @@ commands = [
 ]
 
 for Command in commands
-  new Command program
+  new Command program, config
 
 program
 .parse process.argv

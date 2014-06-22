@@ -34,8 +34,7 @@ class Destroy
 
     .then (units) ->
       # find only units associated with the service we want to destroy
-      _.filter units, (unit) ->
-        true if Service.fromUnitName(unit.unit, [ service ]) is service
+      _.filter units, (unit) -> unit.belongsTo service
 
     .then (serviceUnits) ->
       units = serviceUnits
@@ -60,8 +59,8 @@ class Destroy
 
       # run `fleet destroy` for each unit
       q.all units.map (unit) ->
-        log.info string(unit.unit).chompRight('.service').toString(), 'Destroying'
-        fleetctl.destroy unit.unit
+        log.info string(unit.name).chompRight('.service').toString(), 'destroying'
+        fleetctl.destroy unit.name
 
     .then -> log.action "#{serviceName} has been destroyed."
 

@@ -1,6 +1,8 @@
 proxyquire = require 'proxyquire'
 q = require 'q'
 
+Unit = require '../src/unit'
+
 program = null
 cordagefile = null
 fleetctl = null
@@ -24,8 +26,8 @@ describe 'cordage destroy', ->
     destroy = new Destroy program
 
     fleetctl.listUnits.andReturn q([
-      { unit: 'test.v1.1.service', state: 'activated', active: 'running', ip: '127.0.0.1' }
-      { unit: 'app.v1.1.service', state: 'activated', active: 'failed', ip: '127.0.0.2' }
+      new Unit 'test.v1.1.service', state: 'activated', active: 'running', ip: '127.0.0.1'
+      new Unit 'app.v1.1.service', state: 'activated', active: 'failed', ip: '127.0.0.2'
     ])
 
     cordagefile.services.push
