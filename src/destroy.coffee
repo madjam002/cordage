@@ -59,7 +59,7 @@ class Destroy
 
       # run `fleet destroy` for each unit
       q.all units.map (unit) ->
-        log.info string(unit.name).chompRight('.service').toString(), 'Destroying'
+        log.info string(unit.name).chompRight('.service').toString(), 'destroying'
         fleetctl.destroy unit.name
 
     .then -> log.action "#{serviceName} has been destroyed."

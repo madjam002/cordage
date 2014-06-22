@@ -8,11 +8,13 @@ class Unit
   constructor: (pathOrName, state) ->
     @name = path.basename pathOrName
 
+    # parse the name and get information like service name, version and instance
     nameParts = @name.split '.'
     @serviceName = nameParts[0]
     @version = string(nameParts[1]).chompLeft('v').toString()
     @instance = parseInt nameParts[2]
 
+    # check if name is a path
     if string(pathOrName).startsWith('/') or string(pathOrName).startsWith('.')
       @path = pathOrName
 
