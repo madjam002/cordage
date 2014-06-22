@@ -13,7 +13,7 @@ class Service
   units: []
 
   constructor: (@name, @config) ->
-    @minUnits = @config.minUnits or 1
+    @minUnits = @config?.minUnits or 1
 
   # Public: Indicates how many units there should be for this service.
   @::accessor 'unitCount',

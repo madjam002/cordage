@@ -11,9 +11,9 @@ class Unit
     nameParts = @name.split '.'
     @serviceName = nameParts[0]
     @version = string(nameParts[1]).chompLeft('v').toString()
-    @instance = nameParts[2]
+    @instance = parseInt nameParts[2]
 
-    if string(pathOrName).startsWith '/' or string(pathOrName).startsWith '.'
+    if string(pathOrName).startsWith('/') or string(pathOrName).startsWith('.')
       @path = pathOrName
 
     {@state, @active, @ip} = state if state?
