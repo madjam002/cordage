@@ -1,7 +1,7 @@
 {
   "name": "cordage",
-  "version": "0.0.0",
-  "description": "A CLI tool making it easier to deploy and manage your application using fleet, etcd, and CoreOS.",
+  "version": "0.0.1",
+  "description": "A tool for simplifying deployments and managing of services using fleet and CoreOS.",
   "main": "lib",
   "scripts": {
     "prepublish": "grunt compile",
