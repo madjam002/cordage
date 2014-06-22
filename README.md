@@ -24,6 +24,12 @@ started straight away.
 - View your deployed services and units
 - Destroy a specific service and/or a specific version of a service
 
+## Upcoming Features
+
+- Quick scaling of services with `cordage addunit` and `cordage removeunit`
+- View logs for your services with `cordage logs`
+- Automatic deployment of a private docker registry to your cluster for easy image deployment
+- Build your application images and push them to a private or public registry with `cordage build`
 
 ## Install
 
