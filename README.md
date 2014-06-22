@@ -1,9 +1,16 @@
-Cordage [![Build Status](http://img.shields.io/travis/madjam002/cordage.svg?style=flat)](https://travis-ci.org/madjam002/cordage) [![NPM](http://img.shields.io/npm/v/cordage.svg?style=flat)](https://npmjs.org/package/cordage) ![Downloads](http://img.shields.io/npm/dm/cordage.svg?style=flat)
+Cordage [![Build Status](https://img.shields.io/travis/madjam002/cordage.svg?style=flat)](https://travis-ci.org/madjam002/cordage) [![NPM](https://img.shields.io/npm/v/cordage.svg?style=flat)](https://npmjs.org/package/cordage) ![Downloads](https://img.shields.io/npm/dm/cordage.svg?style=flat)
 =======
 
 Cordage is a simple command-line tool which makes it easy to **deploy and manage
 your application(s)** across several of your own servers using [Docker](http://docker.io/),
 [CoreOS](http://coreos.com) and [fleet](http://github.com/coreos/fleet).
+
+Define the services for your application in `Cordagefile.coffee` and then deploy them
+using the command-line tool.
+
+Cordage runs `fleetctl` commands behind the scenes and removes the need of writing systemd
+configuration files, as they are generated automatically when you deploy. Cordage makes it easy
+to add additional units for a service, making it easy to scale your application when necessary.
 
 Cordage runs locally on your machine, meaning there is no complicated software
 to install on your servers. If you're already using CoreOS, then you can get
@@ -12,15 +19,12 @@ started straight away.
 
 ## Install
 
-### Cordage is NOT ready for usage yet, please wait for v0.0.1!
-
 ```sh
 $ npm install -g cordage
 ```
 
 Cordage depends on [Node.js](http://nodejs.org/), [npm](http://npmjs.org/) and [fleetctl](https://coreos.com/docs/launching-containers/launching/fleet-using-the-client/).
 Please make sure these dependencies are installed on your system.
-
 
 ## Usage
 
@@ -61,7 +65,8 @@ $ cordage
 ### Deploying services
 
 Once you have configured your services in `Cordagefile.coffee`, you can deploy
-them to your cluster.
+them to your cluster. Cordage will automatically detect new versions of your service
+docker images, making it easy to deploy a new version of your application.
 
 ##### Build and deploy your services across the cluster
 
@@ -89,6 +94,12 @@ can use the destroy command.
 
 ```sh
 $ cordage destroy app
+```
+
+##### Destroy all units for a specific version of a service
+
+```sh
+$ cordage destroy app:12.04
 ```
 
 
