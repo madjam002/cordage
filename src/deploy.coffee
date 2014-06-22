@@ -25,13 +25,22 @@ class Deploy
   run: =>
     services = null
     registryApi = new RegistryApi
-    unitBuilder = new UnitBuilder registryApi, @config
+    unitBuilder = new UnitBuilder @config
 
     cordagefile.read()
 
     .then ->
       services = cordagefile.services
 
+      log.action 'Retrieving version information about services...'
+
+      # get latest image tag from docker index for each service
+      q.all cordagefile.services.map (service) ->
+        registryApi.getLatestTagForImage service.config.image
+        .then (tag) ->
+          service.tag = tag
+
+    .then ->
       log.action 'Checking for existing units...'
       fleetctl.listUnits()
 
@@ -39,16 +48,28 @@ class Deploy
       q.all cordagefile.services.map (service) ->
 
         # find existing units for this service
-        serviceUnits = _.filter units, (unit) -> unit.belongsTo service
+        serviceUnits = _.filter units, (unit) -> unit.belongsTo(service) and unit.isVersion(service.tag.name)
 
         if serviceUnits.length > 0
-          log.info service.name, "#{serviceUnits.length} unit(s) have already been deployed"
+          service.unitCount = serviceUnits.length
+          log.info service.name, "#{serviceUnits.length} unit(s) have already been deployed for version #{service.tag.name}"
+        else
+          log.info service.name, "No units have been deployed for version #{service.tag.name}"
 
-        # deploy the same amount of units as there are deployed already
-        service.unitCount = serviceUnits.length
+          oldServiceUnits = _.filter units, (unit) -> unit.belongsTo(service) and not unit.isVersion(service.tag.name)
+          unitsByVersion = _.groupBy oldServiceUnits, 'version'
+          oldUnitCount = _.max(unitsByVersion, (unit, key) -> unit.length).length
+
+          service.unitCount = oldUnitCount
+
+          if oldUnitCount > 0
+            log.info service.name, "#{oldUnitCount} unit(s) already exist for a previous version"
+          else
+            log.info service.name, "No units exist for any previous versions"
+
         log.info service.name, "Building #{service.unitCount} unit(s)"
 
-        service.build unitBuilder
+        service.build unitBuilder, service.tag.name
 
     .then ->
       log.action 'Pushing units...'

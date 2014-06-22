@@ -23,7 +23,7 @@ class Service
       _unitCount = value
 
   # Public: Builds unit files for this service.
-  build: (unitBuilder) =>
+  build: (unitBuilder, version) =>
     q.all [1..@unitCount].map (index) =>
-      unitBuilder.build this, index
+      unitBuilder.build this, version, index
     .then (@units) =>

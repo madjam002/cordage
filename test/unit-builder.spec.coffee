@@ -8,8 +8,7 @@ describe 'unit builder', ->
       fs = jasmine.createSpyObj 'fs', ['writeFileSync']
       mkdirp = jasmine.createSpyObj 'mkdirp', ['sync']
       swig = jasmine.createSpyObj 'swig', ['compileFile']
-      registryApi =
-        getLatestTagForImage: -> q name: '14.04'
+
       config =
         servicesPath: '/tmp/services'
 
@@ -26,8 +25,8 @@ describe 'unit builder', ->
         name: 'app'
         config: {}
 
-      builder = new UnitBuilder registryApi, config
-      builder.build service, 1
+      builder = new UnitBuilder config
+      builder.build service, '14.04', 1
       .then ->
         expect(fs.writeFileSync).toHaveBeenCalledWith(
           "/tmp/services/app.v14-04.1.service", 'template contents'

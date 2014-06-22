@@ -9,6 +9,6 @@ describe 'service', ->
       service = new Service 'app',
         description: 'Super awesome application'
 
-      service.build unitBuilder
+      service.build unitBuilder, '14.04'
 
-      expect(unitBuilder.build).toHaveBeenCalledWith service, 1
+      expect(unitBuilder.build).toHaveBeenCalledWith service, '14.04', 1
