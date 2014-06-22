@@ -1,1 +1,9 @@
 src
+test
+
+.npmignore
+.DS_Store
+npm-debug.log
+.travis.yml
+coffeelint.json
+Gruntfile.coffee
